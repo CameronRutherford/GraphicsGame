@@ -8,11 +8,10 @@
 
 using namespace std;
 
-Brick brick;
-
 class Environment {
 private:
 	vector<vec3> bricks;
+	Brick brick; //Keep this here, and don't move it to a global variable
 public:
 	Environment() {}
 

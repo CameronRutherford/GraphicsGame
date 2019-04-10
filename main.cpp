@@ -185,8 +185,8 @@ void init()
 	
 	env.initialize_bricks();
 	
-	for (int i = 0; i < 1; i++) {
-		for (int j = 0; j < 1; j++) {
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
 			env.add_brick(vec3(i + 1, 0, j + 1)); // Add the brick to the environment for object collision
 		}
 	}
