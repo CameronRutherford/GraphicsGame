@@ -28,12 +28,20 @@ public:
 		bricks.push_back(offset);
 	}
 
+	float brick_radius() {
+		return brick.get_brick_radius();
+	}
+
+	float brick_clip_radius() {
+		return brick.get_clip_radius();
+	}
+
 	bool collision(point4 new_pos) {
 
 		//Check to see if you hit a brik
 		for (unsigned int i = 0; i < bricks.size(); i++) {
 			vec3 curr_centre = bricks[i];
-			float radius = brick.getRadius();
+			float radius = brick.get_clip_radius();
 			if (pow((new_pos.x - curr_centre.x), 2) + pow((new_pos.y - curr_centre.y), 2) + pow((new_pos.z - curr_centre.z), 2) <= pow(radius, 2)) {
 				return true;
 			}

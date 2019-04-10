@@ -171,8 +171,6 @@ void init_gl()
 	glEnable(GL_DEPTH_TEST);
 }
 
-vector<Brick> bricks;
-
 void init()
 {   
 	init_gl();			    // Setup general OpenGL stuff of the object //could do all of this by creating  skybox.init function that does all 5 things
@@ -184,12 +182,26 @@ void init()
 	go_skybox.init_texture_map();	// Initialize the texture map for this object
 	
 	env.initialize_bricks();
+	float br = env.brick_radius();
+
 	
+	/*
+	// This will generate "lines" of bricks that you can hopefully walk through
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
-			env.add_brick(vec3(i + 1, 0, j + 1)); // Add the brick to the environment for object collision
+			// Probably a way to remove the magic numbers from this with different features of env?
+			env.add_brick(vec3((i * 6 * br) + 4 * br, 0, (br * j) + 4 * br)); // Add the brick to the environment for object collision
 		}
 	}
+	*/
+	
+	// This section of code "seamlessly" places bricks in the four corners of the skybox
+	float max = go_skybox.get_max_brick_coord(env.brick_radius());
+
+	env.add_brick(vec3(max, 0, max));
+	env.add_brick(vec3(max, 0, -max));
+	env.add_brick(vec3(-max, 0, -max));
+	env.add_brick(vec3(-max, 0, max));
 
 	view = RotateY(15) * view;//rotate eye 30 degrees
 	at = eye + view;

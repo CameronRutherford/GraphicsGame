@@ -1,20 +1,22 @@
 #ifndef BRICK_BOX_H
 #define BRICK_BOX_H
 #include "GraphicsObject.h"
+#include <cmath>
 
 class Brick : public graphics_object
 {
 private:
-	float radius = 0.90f;
+	float brick_size = 2.0f;
+	float clip_radius = (float)((3.0 / sqrt(2) ) * brick_size); // This seems like a magic value, but it is the easiest way to ensure no body clipping at least
 	point4  brick_vertices[8] = {
-		point4(-0.5,-0.5,0.5, 1.0),
-		point4(0.5,-0.5,0.5, 1.0),
-		point4(0.5,0.5,0.5, 1.0),
-		point4(-0.5,0.5,0.5, 1.0),
-		point4(-0.5,-0.5,-0.5, 1.0),
-		point4(0.5,-0.5,-0.5, 1.0),
-		point4(0.5,0.5,-0.5, 1.0),
-		point4(-0.5,0.5,-0.5, 1.0)
+		point4(-brick_size, -brick_size,  brick_size, 1.0),
+		point4( brick_size, -brick_size,  brick_size, 1.0),
+		point4( brick_size,  brick_size,  brick_size, 1.0),
+		point4(-brick_size,  brick_size,  brick_size, 1.0),
+		point4(-brick_size, -brick_size, -brick_size, 1.0),
+		point4( brick_size, -brick_size, -brick_size, 1.0),
+		point4( brick_size,  brick_size, -brick_size, 1.0),
+		point4(-brick_size,  brick_size, -brick_size, 1.0)
 	};
 
 public:
@@ -172,8 +174,17 @@ public:
 		glDeleteVertexArrays(1, &vao);
 	}
 
-	float getRadius() {
-		return this->radius;
+	float get_clip_radius() {
+		return this->clip_radius;
+	}
+
+	float get_brick_radius() { 
+		return brick_size / 2.0; 
+	}
+
+	void set_brick_radius(float size) {
+		this->brick_size = size;
+		clip_radius = (float)((3.0 / sqrt(2)) * brick_size);
 	}
 
 };
