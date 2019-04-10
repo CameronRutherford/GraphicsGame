@@ -1,0 +1,3 @@
+﻿  main.cpp
+z:\cs-357-1-compgraphics\midterm project\main.cpp(190): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+  EX14_01_SkyCube.vcxproj -> Z:\CS-357-1-CompGraphics\Midterm Project\Debug\EX14_01_SkyCube.exe
