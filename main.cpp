@@ -1,6 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <iomanip>
+#include <stdio.h>
+#include <time.h>
+#include <string>
 #include <cassert>
 #include <vector>
 #include "Angel.h"
@@ -46,6 +50,7 @@ bool d_down = false;
 bool w_down = false;
 float locked_mouse = true;
 int accum_dy = 0;
+const int maze_size = 13;
 
 void display( void )
 {
@@ -130,7 +135,7 @@ void mouse_moving(int x, int y) {
 
 		//Move the cursor back to the middle of the screen, and make it invisible again
 		glutWarpPointer(center_x, center_y);
-		glutSetCursor(GLUT_CURSOR_NONE);
+		glutSetCursor(GLUT_CURSOR_CROSSHAIR);
 	}
 	else {
 		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
@@ -195,14 +200,79 @@ void init()
 	}
 	*/
 	
+	/*
 	// This section of code "seamlessly" places bricks in the four corners of the skybox
 	float max = go_skybox.get_max_brick_coord(env.brick_radius());
 
-	env.add_brick(vec3(max, 0, max));
-	env.add_brick(vec3(max, 0, -max));
-	env.add_brick(vec3(-max, 0, -max));
-	env.add_brick(vec3(-max, 0, max));
+	env.add_brick(vec3(max, -env.brick_clip_radius(), max));
+	env.add_brick(vec3(max, -env.brick_clip_radius(), -max));
+	env.add_brick(vec3(-max + 2 * br, -env.brick_clip_radius(), -max));
+	env.add_brick(vec3(-max, -env.brick_clip_radius(), -max));
+	env.add_brick(vec3(-max, -env.brick_clip_radius(), max));
+	*/
 
+	/*
+	// Try and place bricks along the floor
+
+	float max = go_skybox.get_max_brick_coord(env.brick_radius());
+
+	for (float x = -max; x <= max; x += 2 * env.brick_radius()) {
+		for (float y = -max; y <= max; y += 2 * env.brick_radius()) {
+			env.add_brick(vec3(x, -env.brick_clip_radius(), y));
+		}
+	}
+	*/
+
+	//Try and place the maze along the floor
+
+	srand(time(NULL));
+	int i = rand() % 10;
+	string file = "Mazes/maze_" + to_string(i) + ".txt";
+
+	cout << "Using maze number " + to_string(i) << endl;
+	ifstream fs(file);
+
+	int maze[maze_size][maze_size];
+
+	int y_count = 0, x_count = 0;
+
+	for (string line; std::getline(fs, line); )
+	{
+		for (char& c : line) {
+			if (c == '1') {
+				maze[x_count][y_count] = 1;
+			}
+			else {
+				maze[x_count][y_count] = 0;
+			}
+			x_count++;
+		}
+		y_count++;
+		x_count = 0;
+	}
+
+	float max = go_skybox.get_max_brick_coord(env.brick_radius());
+
+	int x_i = 0, x_m = 0, y_i = 0, y_m = 0;
+
+	for (float x = -max; x <= max; x += 2 * env.brick_radius(), x_i++) {
+		for (float y = -max; y <= max; y += 2 * env.brick_radius(), y_i++) {
+			if (maze[(int)x_m][(int)y_m] == 1) {
+				env.add_brick(vec3(x, 0, y));
+			}
+			else {
+				eye = vec4(x - env.brick_radius(), 0.0, y - env.brick_radius(), 1.0);
+			}
+			if (y_i % 2 == 1) {
+				y_m++;
+			}
+		}
+		if (x_i % 2 == 1) {
+			x_m++;
+		}
+		y_m = 0;
+		y_i = 0;
+	}
 	view = RotateY(15) * view;//rotate eye 30 degrees
 	at = eye + view;
 

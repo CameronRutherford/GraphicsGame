@@ -7,7 +7,7 @@ class Brick : public graphics_object
 {
 private:
 	float brick_size = 2.0f;
-	float clip_radius = (float)((3.0 / sqrt(2) ) * brick_size); // This seems like a magic value, but it is the easiest way to ensure no body clipping at least
+	float clip_radius = (float)((3.0 / sqrt(2) ) * brick_size) * 0.5f; // This seems like a magic value, but it is the easiest way to ensure no body clipping at least
 	point4  brick_vertices[8] = {
 		point4(-brick_size, -brick_size,  brick_size, 1.0),
 		point4( brick_size, -brick_size,  brick_size, 1.0),

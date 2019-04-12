@@ -36,15 +36,16 @@ def maze(width=81, height=51, complexity=.75, density=.75):
 	return Z
 
 for i in range(10):
-	Z = maze(11, 11)
+	Z = maze(13, 13)
+	
 	with open("Mazes/maze_{}.txt".format(i), 'w') as f:	
 		for x in range(0, Z.shape[0]):
 			for y in range(0, Z.shape[1]):
 				f.write(str(1)) if Z[x,y] else f.write(str(0))
 			f.write("\n")
-	'''
+	
 	pyplot.figure(figsize=(11, 11))
 	pyplot.imshow(Z, cmap=pyplot.cm.binary, interpolation='nearest')
 	pyplot.xticks([]), pyplot.yticks([])
 	pyplot.show()
-	'''
+	

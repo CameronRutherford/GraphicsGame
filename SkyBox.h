@@ -5,7 +5,7 @@
 class SkyBox : public graphics_object //inherits from graphics_object
 {
 private:
-	float scale = 50;
+	float scale = 52; //52 for a 26 by 26 grid
 	// Data vertex for the sky cube
 	point4  skybox_vertices[8] = {
 		point4(-0.5,-0.5,0.5, 1.0),
