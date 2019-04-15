@@ -14,8 +14,8 @@
 // Global Projection Matrices
 mat4 projection, modelview, translate;  
 vec4 view(0.0, 0.0, -2.0, 0.0);
-vec4 move_back_or_forward(0.0f, 0.0f, -0.05f, 0.0f);
-vec4 move_left_or_right(-0.05f, 0.0f, 0.0f, 0.0f);
+vec4 move_back_or_forward;
+vec4 move_left_or_right;
 GLfloat dir = 1.0;
 GLint axis = 1;
 
@@ -38,7 +38,7 @@ Environment env;
 // The objects
 GLfloat  aspect = 1.0;       // Viewport aspect ratio
 point4  eye(0.0, 0.0, 1.0, 1.0);
-point4  at(0.0, 0.0, -1.0, 1.0);
+point4  at;
 vec4    up(0.0, 1.0, 0.0, 0.0);
 
 int width = 0, height = 0;
@@ -254,6 +254,7 @@ void init()
 	float max = go_skybox.get_max_brick_coord(env.brick_radius());
 
 	int x_i = 0, x_m = 0, y_i = 0, y_m = 0;
+	point4 delta;
 
 	for (float x = -max; x <= max; x += 2 * env.brick_radius(), x_i++) {
 		for (float y = -max; y <= max; y += 2 * env.brick_radius(), y_i++) {
@@ -261,7 +262,7 @@ void init()
 				env.add_brick(vec3(x, 0, y));
 			}
 			else {
-				eye = vec4(x - env.brick_radius(), 0.0, y - env.brick_radius(), 1.0);
+				delta = vec4(x - env.brick_radius(), 0.0, y - env.brick_radius(), 1.0) - eye;
 			}
 			if (y_i % 2 == 1) {
 				y_m++;
@@ -273,8 +274,16 @@ void init()
 		y_m = 0;
 		y_i = 0;
 	}
-	view = RotateY(15) * view;//rotate eye 30 degrees
-	at = eye + view;
+
+	//Update the player's position, and initialize the movement vectors
+	{
+		eye += delta;
+		at = eye + point4(0.0, 0.0, -2.0, 0.0);
+
+		float movement_sensitivity = 0.05;
+		move_back_or_forward = normalize((at - eye)) * movement_sensitivity;
+		move_left_or_right = -normalize(cross(move_back_or_forward, up)) * movement_sensitivity;
+	}
 
 	GL_CHECK_ERRORS
 }
