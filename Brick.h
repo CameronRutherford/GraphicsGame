@@ -179,7 +179,7 @@ public:
 	}
 
 	float get_brick_radius() { 
-		return brick_size / 2.0; 
+		return brick_size / 2.0f; 
 	}
 
 	void set_brick_radius(float size) {

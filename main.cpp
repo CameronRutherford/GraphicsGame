@@ -22,8 +22,7 @@ GLint axis = 1;
 #include "texture.h" // for the bitmap texture loader
 #include "SkyBox.h"
 #include "Brick.h"
-#include "tree.h"
-#include "Zebra.h"
+#include "Carpet.h"
 #include "GraphicsObject.h"
 #include "ObjectCollision.h"
 
@@ -187,7 +186,9 @@ void init()
 	go_skybox.init_texture_map();	// Initialize the texture map for this object
 	
 	env.initialize_bricks();
+	//env.initialize_carpets();
 	float br = env.brick_radius();
+	float cr = env.brick_clip_radius();
 
 	
 	/*
@@ -225,7 +226,7 @@ void init()
 
 	//Try and place the maze along the floor
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	int i = rand() % 10;
 	string file = "Mazes/maze_" + to_string(i) + ".txt";
 
@@ -251,18 +252,19 @@ void init()
 		x_count = 0;
 	}
 
-	float max = go_skybox.get_max_brick_coord(env.brick_radius());
-
+	float max = go_skybox.get_max_brick_coord(br);
 	int x_i = 0, x_m = 0, y_i = 0, y_m = 0;
 	point4 delta;
+	vec3 hope;
 
-	for (float x = -max; x <= max; x += 2 * env.brick_radius(), x_i++) {
-		for (float y = -max; y <= max; y += 2 * env.brick_radius(), y_i++) {
+	for (float x = -max; x <= max; x += 2 * br, x_i++) {
+		for (float y = -max; y <= max; y += 2 * br, y_i++) {
 			if (maze[(int)x_m][(int)y_m] == 1) {
 				env.add_brick(vec3(x, 0, y));
 			}
 			else {
-				delta = vec4(x - env.brick_radius(), 0.0, y - env.brick_radius(), 1.0) - eye;
+				delta = vec4(x - br, 0.0, y -br, 1.0) - eye;
+				hope = vec3(x, -br, y);
 			}
 			if (y_i % 2 == 1) {
 				y_m++;
@@ -275,12 +277,14 @@ void init()
 		y_i = 0;
 	}
 
+	//env.add_carpet(hope);
+
 	//Update the player's position, and initialize the movement vectors
 	{
 		eye += delta;
 		at = eye + point4(0.0, 0.0, -2.0, 0.0);
 
-		float movement_sensitivity = 0.05;
+		float movement_sensitivity = 0.05f;
 		move_back_or_forward = normalize((at - eye)) * movement_sensitivity;
 		move_left_or_right = -normalize(cross(move_back_or_forward, up)) * movement_sensitivity;
 	}

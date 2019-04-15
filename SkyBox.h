@@ -165,7 +165,7 @@ public:
 	}
 
 	float get_max_brick_coord(float brick_radius) {
-		return scale * 0.5 - brick_radius;
+		return (float)(scale * 0.5f - brick_radius);
 	}
 };
 #endif
