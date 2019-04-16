@@ -7,7 +7,7 @@ class Brick : public graphics_object
 {
 private:
 	float brick_size = 2.0f;
-	float clip_radius = (float)((3.0 / sqrt(2) ) * brick_size) * 0.5f; // This seems like a magic value, but it is the easiest way to ensure no body clipping at least
+	float clip_radius = (float)((3.0 / sqrt(2) ) * brick_size) * 0.45f; // This seems like a magic value, but it is the easiest way to ensure no body clipping at least
 	point4  brick_vertices[8] = {
 		point4(-brick_size, -brick_size,  brick_size, 1.0),
 		point4( brick_size, -brick_size,  brick_size, 1.0),
@@ -113,12 +113,12 @@ public:
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		int TexRight = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_X);
-		int TexLeft = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
-		int TexTop = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-		int TexBottom = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
-		int TexFront = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
-		int TexBack = MyLoadCubeMapBitmap("Brick\\brick.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+		int TexRight = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+		int TexLeft = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+		int TexTop = MyLoadCubeMapBitmap("Brick\\floor.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+		int TexBottom = MyLoadCubeMapBitmap("Brick\\ceiling.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+		int TexFront = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+		int TexBack = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 
 		texMapLocation = glGetUniformLocation(program, "texMap");
 		glUniform1i(texMapLocation, tex);

@@ -22,7 +22,6 @@ GLint axis = 1;
 #include "texture.h" // for the bitmap texture loader
 #include "SkyBox.h"
 #include "Brick.h"
-#include "Carpet.h"
 #include "GraphicsObject.h"
 #include "ObjectCollision.h"
 
@@ -134,7 +133,7 @@ void mouse_moving(int x, int y) {
 
 		//Move the cursor back to the middle of the screen, and make it invisible again
 		glutWarpPointer(center_x, center_y);
-		glutSetCursor(GLUT_CURSOR_CROSSHAIR);
+		glutSetCursor(GLUT_CURSOR_NONE);
 	}
 	else {
 		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
@@ -186,7 +185,6 @@ void init()
 	go_skybox.init_texture_map();	// Initialize the texture map for this object
 	
 	env.initialize_bricks();
-	//env.initialize_carpets();
 	float br = env.brick_radius();
 	float cr = env.brick_clip_radius();
 
@@ -253,38 +251,34 @@ void init()
 	}
 
 	float max = go_skybox.get_max_brick_coord(br);
-	int x_i = 0, x_m = 0, y_i = 0, y_m = 0;
 	point4 delta;
 	vec3 hope;
 
-	for (float x = -max; x <= max; x += 2 * br, x_i++) {
-		for (float y = -max; y <= max; y += 2 * br, y_i++) {
+	for (float x = -max, x_i = 0, x_m = 0; x <= max; x += 2 * br, x_i++) {
+		for (float y = -max, y_i = 0, y_m = 0; y <= max; y += 2 * br, y_i++) {
 			if (maze[(int)x_m][(int)y_m] == 1) {
 				env.add_brick(vec3(x, 0, y));
 			}
 			else {
 				delta = vec4(x - br, 0.0, y -br, 1.0) - eye;
-				hope = vec3(x, -br, y);
+				env.add_brick(vec3(x, -2 * br, y));
+				env.add_brick(vec3(x, 2 * br, y));
 			}
-			if (y_i % 2 == 1) {
+			if ((int)y_i % 2 == 1) {
 				y_m++;
 			}
 		}
-		if (x_i % 2 == 1) {
+		if ((int)x_i % 2 == 1) {
 			x_m++;
 		}
-		y_m = 0;
-		y_i = 0;
 	}
-
-	//env.add_carpet(hope);
 
 	//Update the player's position, and initialize the movement vectors
 	{
 		eye += delta;
 		at = eye + point4(0.0, 0.0, -2.0, 0.0);
 
-		float movement_sensitivity = 0.05f;
+		float movement_sensitivity = 0.5f;
 		move_back_or_forward = normalize((at - eye)) * movement_sensitivity;
 		move_left_or_right = -normalize(cross(move_back_or_forward, up)) * movement_sensitivity;
 	}
