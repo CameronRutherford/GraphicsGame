@@ -1,3 +1,5 @@
+# Code modified from: https://en.wikipedia.org/wiki/Maze_generation_algorithm#Python_code_example
+
 import numpy
 from numpy.random import randint as rand
 import matplotlib.pyplot as pyplot
@@ -43,9 +45,11 @@ for i in range(10):
 			for y in range(0, Z.shape[1]):
 				f.write(str(1)) if Z[x,y] else f.write(str(0))
 			f.write("\n")
-	
+	'''
+	# Kepp 
 	pyplot.figure(figsize=(11, 11))
 	pyplot.imshow(Z, cmap=pyplot.cm.binary, interpolation='nearest')
 	pyplot.xticks([]), pyplot.yticks([])
 	pyplot.show()
+	'''
 	

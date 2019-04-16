@@ -116,7 +116,7 @@ public:
 		int TexRight = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_X);
 		int TexLeft = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
 		int TexTop = MyLoadCubeMapBitmap("Brick\\floor.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-		int TexBottom = MyLoadCubeMapBitmap("Brick\\ceiling.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+		int TexBottom = MyLoadCubeMapBitmap("Brick\\floor.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
 		int TexFront = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
 		int TexBack = MyLoadCubeMapBitmap("Brick\\wall.bmp", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 

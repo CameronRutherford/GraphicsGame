@@ -1,3 +1,7 @@
+// Walk through maze for computer graphics
+// Made by: Cameron Rutherford
+// Last Edited: 4/15/2019
+
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -30,7 +34,7 @@ using namespace std;
 // THE global SkyBox Object
 SkyBox go_skybox;
 
-// Used to determine object collision things...
+// Used to determine object collision and stores the location of all the walls and floor
 Environment env;
 
 // The objects
@@ -77,22 +81,22 @@ void display( void )
 	// Figure out the velocity
 	if (!(a_down && d_down)) {
 		if (a_down) {
-			new_eye = eye + move_left_or_right;
-			new_at = at + move_left_or_right;
+			new_eye += move_left_or_right;
+			new_at += move_left_or_right;
 		}
 		else if (d_down) {
-			new_eye = eye - move_left_or_right;
-			new_at = at - move_left_or_right;
+			new_eye -= move_left_or_right;
+			new_at -= move_left_or_right;
 		}
 	}
 	if (!(w_down && s_down)) {
 		if (w_down) {
-			new_eye = eye + move_back_or_forward;
-			new_at = at + move_back_or_forward;
+			new_eye += move_back_or_forward;
+			new_at += move_back_or_forward;
 		}
 		else if (s_down) {
-			new_eye = eye - move_back_or_forward;
-			new_at = at - move_back_or_forward;
+			new_eye -= move_back_or_forward;
+			new_at -= move_back_or_forward;
 		}
 	}
 
@@ -188,42 +192,7 @@ void init()
 	float br = env.brick_radius();
 	float cr = env.brick_clip_radius();
 
-	
-	/*
-	// This will generate "lines" of bricks that you can hopefully walk through
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
-			// Probably a way to remove the magic numbers from this with different features of env?
-			env.add_brick(vec3((i * 6 * br) + 4 * br, 0, (br * j) + 4 * br)); // Add the brick to the environment for object collision
-		}
-	}
-	*/
-	
-	/*
-	// This section of code "seamlessly" places bricks in the four corners of the skybox
-	float max = go_skybox.get_max_brick_coord(env.brick_radius());
-
-	env.add_brick(vec3(max, -env.brick_clip_radius(), max));
-	env.add_brick(vec3(max, -env.brick_clip_radius(), -max));
-	env.add_brick(vec3(-max + 2 * br, -env.brick_clip_radius(), -max));
-	env.add_brick(vec3(-max, -env.brick_clip_radius(), -max));
-	env.add_brick(vec3(-max, -env.brick_clip_radius(), max));
-	*/
-
-	/*
-	// Try and place bricks along the floor
-
-	float max = go_skybox.get_max_brick_coord(env.brick_radius());
-
-	for (float x = -max; x <= max; x += 2 * env.brick_radius()) {
-		for (float y = -max; y <= max; y += 2 * env.brick_radius()) {
-			env.add_brick(vec3(x, -env.brick_clip_radius(), y));
-		}
-	}
-	*/
-
-	//Try and place the maze along the floor
-
+	// Chose which maze file to load "randomly" and then get the information from the text file
 	srand((unsigned int)time(NULL));
 	int i = rand() % 10;
 	string file = "Mazes/maze_" + to_string(i) + ".txt";
@@ -231,7 +200,7 @@ void init()
 	cout << "Using maze number " + to_string(i) << endl;
 	ifstream fs(file);
 
-	int maze[maze_size][maze_size];
+	int maze[maze_size][maze_size]; // Will have a 1 stored if the grid location of the maze is filled in, a 0 if not
 
 	int y_count = 0, x_count = 0;
 
@@ -261,8 +230,8 @@ void init()
 			}
 			else {
 				delta = vec4(x - br, 0.0, y -br, 1.0) - eye;
-				env.add_brick(vec3(x, -2 * br, y));
-				env.add_brick(vec3(x, 2 * br, y));
+				env.add_brick(vec3(x, -2 * br, y)); //Comment out this line to remove the floor
+				//env.add_brick(vec3(x, 2 * br, y)); //Comment out this line to remove the ceiling
 			}
 			if ((int)y_i % 2 == 1) {
 				y_m++;
@@ -278,7 +247,7 @@ void init()
 		eye += delta;
 		at = eye + point4(0.0, 0.0, -2.0, 0.0);
 
-		float movement_sensitivity = 0.5f;
+		float movement_sensitivity = 0.09f;
 		move_back_or_forward = normalize((at - eye)) * movement_sensitivity;
 		move_left_or_right = -normalize(cross(move_back_or_forward, up)) * movement_sensitivity;
 	}

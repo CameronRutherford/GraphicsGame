@@ -10,7 +10,7 @@ using namespace std;
 
 class Environment {
 private:
-	vector<vec3> bricks;
+	vector<vec3> bricks; // Stores the location of where to draw the bricks
 	Brick brick; //Keep this here, and don't move it to a global variable
 public:
 	Environment() {}
@@ -39,7 +39,7 @@ public:
 
 	bool collision(point4 new_pos) {
 
-		//Check to see if you hit a brik
+		//Check to see if you hit a brick
 		for (unsigned int i = 0; i < bricks.size(); i++) {
 			vec3 curr_centre = bricks[i];
 			float radius = brick.get_clip_radius();
@@ -47,7 +47,6 @@ public:
 				return true;
 			}
 		}
-		//Check to see if you hit another object
 
 		return false;
 	}
